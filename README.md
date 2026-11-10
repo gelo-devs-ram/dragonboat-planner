@@ -4,6 +4,36 @@ Coach dashboard for planning dragon boat races, training, attendance and race li
 
 **Stack:** React (Vite) + Express.js + SQLite (libSQL / Turso) with token-based login.
 
+## Technologies used
+
+| Layer | Technology | What it is used for |
+| --- | --- | --- |
+| Front end | **React 18** | Builds the dashboard screens (Dashboard, Races, Members, Training, Line-up, Login) from reusable components |
+| Front end tooling | **Vite** | Development server and production build of the React app |
+| Front end styling | **Plain CSS** | Custom layout, theme and responsive design; **Bricolage Grotesque** font via Google Fonts |
+| Back end runtime | **Node.js** | Runs JavaScript on the server |
+| Back end framework | **Express.js 4** | REST API routes for login, races, members, sessions, attendance, line-ups and the dashboard (`server/app.js`) |
+| Database | **SQLite via libSQL (`@libsql/client`)** | Stores all data. Uses a local file in development and **Turso** (hosted SQLite) online |
+| Authentication | **JSON Web Tokens (`jsonwebtoken`)** | Coach login; the server checks the token on every API route except login |
+| Security helpers | **Node `crypto`**, **CORS** | Timing-safe credential comparison; cross-origin request handling |
+| Configuration | **dotenv** | Loads settings from the `.env` file locally |
+| Dev tooling | **concurrently** | Runs the API and the web app together with `npm run dev` |
+| Version control | **Git and GitHub** | Stores and shares the source code |
+| Hosting | **Vercel** (app and serverless API) and **Turso** (database) | Online deployment |
+
+### How the parts connect
+
+React (browser) -> sends requests with the login token -> Express REST API (`/api/...`) -> libSQL/SQLite database -> response back to React.
+
+### Where each part lives
+
+- `client/`: React + Vite front end (`client/src/pages/` holds each screen, `client/src/api.js` calls the API)
+- `server/app.js`: Express app with all routes and the login check
+- `server/index.js`: starts the Express server locally
+- `api/index.js`: runs the same Express app as a Vercel serverless function
+- `server/db.js`: database connection and tables
+- `vercel.json`: Vercel build and routing settings
+
 ## Features
 
 - **Login**: coach sign-in page; every API route except login needs a valid token (8-hour session)
